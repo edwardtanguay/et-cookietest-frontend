@@ -1,33 +1,47 @@
-import { useEffect } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useState } from 'react';
 import './App.scss';
 
 function App() {
+	const [message, setMessage] = useState('click a button');
+	const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
-	const backendUrl = process.env.BACKEND_URL;
-	useEffect(() => {
-		(async () => {
-			const response = await fetch(backendUrl);
-			const data = await response.json();
-			console.log(data);
-		})();
-	}, []);
-
-	const handle_login = async () => {
-		const response = await fetch(`${backendUrl}/login`);
+	const handle_checkuser = async () => {
+		const requestOptions = {
+			method: 'GET',
+			credentials: 'include'
+		};
+		const response = await fetch(backendUrl, requestOptions);
 		const data = await response.json();
-		console.log(data);
+		setMessage(data.message);
 	}
 
-	const handle_stayloggedin = async () => {
-		const response = await fetch(`${backendUrl}/stayloggedin`);
+	const handle_login = async () => {
+		const requestOptions = {
+			method: 'GET',
+			credentials: 'include'
+		};
+		const response = await fetch(`${backendUrl}/login`, requestOptions);
 		const data = await response.json();
-		console.log(data);
+		setMessage(data.message);
+	}
+
+	const handle_logout = async () => {
+		const requestOptions = {
+			method: 'GET',
+			credentials: 'include'
+		};
+		const response = await fetch(`${backendUrl}/logout`, requestOptions);
+		const data = await response.json();
+		setMessage(data.message);
 	}
 
 	return (
 		<div className="App">
-			<button onClick={handle_login}>login</button>
-			<button onClick={handle_stayloggedin}>stay logged in</button>
+			<div><button onClick={handle_checkuser}>checkuser</button></div>
+			<div><button onClick={handle_login}>login</button></div>
+			<div><button onClick={handle_logout}>logout</button></div>
+			<div>{message}</div>
 		</div>
 	);
 }
